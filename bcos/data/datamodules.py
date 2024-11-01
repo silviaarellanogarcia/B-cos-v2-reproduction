@@ -101,7 +101,7 @@ class ClassificationDataModule(pl.LightningDataModule):
             self.eval_dataset,
             self.batch_size,
             shuffle=False,
-            num_workers=self.num_workers,
+            num_workers=1,
             pin_memory=True,
         )
 
@@ -110,7 +110,7 @@ class ClassificationDataModule(pl.LightningDataModule):
             self.eval_dataset,
             self.batch_size,
             shuffle=False,
-            num_workers=self.num_workers,
+            num_workers=1,
             pin_memory=True,
         )
 
@@ -174,8 +174,8 @@ class ImageNetDataModule(ClassificationDataModule):
     # from https://image-net.org/download.php
     NUM_CLASSES: int = 1000
 
-    NUM_TRAIN_EXAMPLES: int = 1_281_167
-    NUM_EVAL_EXAMPLES: int = 50_000
+    NUM_TRAIN_EXAMPLES: int = 34_745
+    NUM_EVAL_EXAMPLES: int = 3_923
 
     CATEGORIES: List[str] = IMAGENET_CATEGORIES
 
