@@ -1,0 +1,24 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Experiment 2: Localisation",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "interpretability.analyses.localisation",
+            "console": "integratedTerminal",
+            "args": [
+                "--reload", "last",
+                "--explainer_name", "Ours",
+                "--analysis_config", "250_2x2",
+                "--smooth", "3",
+                "--batch_size", "64",
+                "--save_path", "${workspaceFolder}/bcos/experiments/ImageNet/bcos_final/resnet_18/"
+            ],
+            "env": {
+                "IMAGENET_PATH": "${workspaceFolder}/bcos/data/imagenet_mini"
+            },
+            "python": "/Users/rosameliacarioni/miniconda3/envs/b_cos/bin/python"
+        }
+    ]
+}

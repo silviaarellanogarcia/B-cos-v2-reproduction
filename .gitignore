@@ -1,4 +1,6 @@
 bcos/data/imagenet_mini
+bcos/data/imagenet_big
+bcos/experiments/ImageNet/bcos_final/resnet_18
 
 # wandb stuff
 wandb/

@@ -71,12 +71,11 @@ class CaptumDerivative(ExplainerBase):
         """
         Calls the attribution method of the respective captum explanation method.
         """
-        if "cuda" in kwargs and not kwargs["cuda"]:
-            return self.__class__.__bases__[-1].attribute(
-                self, img, target=torch.tensor(target), **self.configs
-            )
+        target_tensor = torch.tensor(target)
+        if torch.cuda.is_available() and kwargs.get("cuda", True):
+            target_tensor = target_tensor.cuda()
         return self.__class__.__bases__[-1].attribute(
-            self, img, target=torch.tensor(target).cuda(), **self.configs
+            self, img, target=target_tensor, **self.configs
         )
 
     def attribute_selection(self, img, targets):

@@ -216,44 +216,21 @@ class Experiment:
         """
         model = self.get_model(**kwargs)
 
-        # check if we have training checkpoints
-        if (
-            not self.save_dir.exists()
-            or len(self.available_checkpoints(suppress_warnings=True)) == 0
-        ):
+        # Check for available checkpoints (either .ckpt or .ptk)
+        result = self.available_checkpoints(suppress_warnings=True)
+        if len(result) > 0:
+            # Select the first .ptk or .ckpt file
+            state_dict_path = result[0]
+            device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+            state_dict = torch.load(state_dict_path, map_location=device)
+            model.load_state_dict(state_dict)
             if verbose:
-                print("No checkpoints found! Trying to load external weights...")
+                print(f"Loaded weights from: {state_dict_path}")
             if return_training_ckpt_if_possible:
-                warnings.warn("No checkpoints found! Returning model only.")
-            try:
-                # if no training checkpoints available, then we try to load external weights
-                model = self._try_load_external_weights(verbose, reload=reload, ema=ema)
-                return (
-                    model
-                    if not return_training_ckpt_if_possible
-                    else dict(
-                        model=model,
-                        ckpt=None,
-                    )
-                )
-            except ModelFactoryDoesNotSupportPretrainedError:
-                raise FileNotFoundError(
-                    "No checkpoints found (and no external weights either)!"
-                )
-
-        # have training checkpoints, so load them
-        state_dict, training_ckpt = get_state_dict_and_training_ckpt_from_save_dir(
-            self.save_dir,
-            reload=reload,
-            ema=ema,
-            verbose=verbose,
-        )
-        model.load_state_dict(state_dict)
-
-        if return_training_ckpt_if_possible:
-            return dict(model=model, ckpt=training_ckpt)
-        else:
+                return {"model": model, "ckpt": None}  # No training ckpt for .ptk files
             return model
+        else:
+            raise FileNotFoundError("No checkpoints found (and no external weights either)!")
 
     def available_checkpoints(self, suppress_warnings: bool = False) -> List[Path]:
         """
@@ -272,9 +249,13 @@ class Experiment:
         """
         if not self.save_dir.exists():
             raise ValueError(f"Save directory '{self.save_dir}' does not exist!")
-
+        
         result = list(p for p in self.save_dir.iterdir() if p.suffix == ".ckpt")
 
+        # If no .ckpt files are found, check for .ptk files
+        if len(result) == 0:
+            result = list(p for p in self.save_dir.iterdir() if p.suffix == ".ptk")
+    
         if len(result) == 0 and not suppress_warnings:
             warnings.warn(f"No checkpoints found in '{self.save_dir}'!")
         return result
