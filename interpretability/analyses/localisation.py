@@ -9,6 +9,7 @@ import torch
 import torch.nn.functional as F
 from tqdm import tqdm
 
+from evaluate import load_model_and_config
 from bcos.experiments.utils import Experiment
 from interpretability.analyses.localisation_configs import configs
 from interpretability.analyses.utils import Analyser, get_explainer_factory
@@ -61,23 +62,25 @@ class LocalisationAnalyser(Analyser):
             self.load_results()
             return
 
-        model_data = experiment.load_trained_model(
-            reload=self.config["reload"],
-            verbose=verbose,
-            ema=self.config["ema"],
-            return_training_ckpt_if_possible=True,
-        )
-        model = model_data["model"]
+        # model_data = experiment.load_trained_model(
+        #     reload=self.config["reload"],
+        #     verbose=verbose,
+        #     ema=self.config["ema"],
+        #     return_training_ckpt_if_possible=True,
+        # )
+        # model = model_data["model"]
+        model = experiment.get_my_model()
 
         # set in evaluation mode...
         model = model.eval()
         self.model = model.to(device, non_blocking=True)
 
         # get epoch
-        if "ckpt" in model_data and model_data["ckpt"] is not None:
-            self._epoch = model_data["ckpt"]["epoch"] + 1
-        else:
-            self._epoch = None
+        # if "ckpt" in model_data and model_data["ckpt"] is not None:
+        #     self._epoch = model_data["ckpt"]["epoch"] + 1
+        # else:
+        #     self._epoch = None
+        self._epoch = None
 
         self.explainer = get_explainer(
             model,
@@ -397,6 +400,10 @@ def argument_parser(multiple_args=False, add_help=True):
         help="Which explainer method to use. Ours uses trainer.attribute.",
     )
     parser.add_argument(
+        "--hubconf",
+        help="Test model from local hubconf file.",
+    )
+    parser.add_argument(
         "--analysis_config",
         default="500_3x3",
         nargs=nargs,
@@ -441,6 +448,8 @@ def main(config):
     print()
 
     experiment = Experiment(config.save_path)
+
+    experiment.get_my_model = lambda: load_model_and_config(config)[0]
 
     analyser = LocalisationAnalyser(
         experiment,
