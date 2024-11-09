@@ -175,7 +175,7 @@ class ImageNetDataModule(ClassificationDataModule):
     NUM_CLASSES: int = 1000
 
     NUM_TRAIN_EXAMPLES: int = 34_745
-    NUM_EVAL_EXAMPLES: int = 3_923
+    NUM_EVAL_EXAMPLES: int = 50_000
 
     CATEGORIES: List[str] = IMAGENET_CATEGORIES
 
