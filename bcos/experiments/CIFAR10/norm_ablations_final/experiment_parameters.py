@@ -16,6 +16,10 @@ from bcos.modules import norms
 from bcos.modules.losses import BinaryCrossEntropyLoss
 from bcos.optim import LRSchedulerFactory, OptimizerFactory
 
+import os
+
+B_PARAMETER = float(os.environ.get("B_PARAMETER", "2"))
+
 __all__ = ["CONFIGS"]
 
 NUM_CLASSES = 10
@@ -41,7 +45,7 @@ DEFAULTS = dict(
             num_classes=NUM_CLASSES,
         ),
         bcos_args=dict(
-            b=2,
+            b=B_PARAMETER,
         ),
     ),
     criterion=BinaryCrossEntropyLoss(),
