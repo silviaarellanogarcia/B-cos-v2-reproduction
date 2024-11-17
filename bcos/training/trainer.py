@@ -175,7 +175,7 @@ class ClassificationLitModel(pl.LightningModule):
     def configure_gradient_clipping(
         self,
         optimizer,
-        optimizer_idx,
+        # optimizer_idx,
         gradient_clip_val=None,
         gradient_clip_algorithm=None,
     ) -> None:

@@ -86,6 +86,8 @@ class ImageNetClassificationPresetTrain:
         result["interpolation"] = str(result["interpolation"])
         return result
 
+class PASCALVOCClassificationPresetTrain(ImageNetClassificationPresetTrain):
+    pass
 
 class ImageNetClassificationPresetEval:
     def __init__(
@@ -157,6 +159,10 @@ class ImageNetClassificationPresetEval:
         )
         result["interpolation"] = str(result["interpolation"])
         return result
+
+
+class PASCALVOCClassificationPresetEval(ImageNetClassificationPresetEval):
+    pass
 
 
 CIFAR10_MEAN = (0.49139968, 0.48215841, 0.44653091)

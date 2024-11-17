@@ -217,6 +217,7 @@ class BcosDenseNet(BcosUtilMixin, nn.Module):
         small_inputs: bool = False,  # True for 32x32 images from gpleiss' impl
         logit_bias: Optional[float] = None,
         logit_temperature: Optional[float] = None,
+        **kargs,
     ) -> None:
         super(BcosDenseNet, self).__init__()
 

@@ -9,13 +9,17 @@ import torch
 import torch.nn.functional as F
 from tqdm import tqdm
 
+import sys
+import os
+sys.path.append("/home/arnaucs/B-cos-v2-reproduction")
+
 from bcos.experiments.utils import Experiment
 from interpretability.analyses.localisation_configs import configs
 from interpretability.analyses.utils import Analyser, get_explainer_factory
 
 get_explainer = get_explainer_factory(supress_import_warnings=True)
 
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+device = torch.device(("cuda:%s" % os.environ.get('GPU_NUMBER', 0)) if torch.cuda.is_available() else "cpu")
 
 
 class LocalisationAnalyser(Analyser):

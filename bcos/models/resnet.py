@@ -42,6 +42,8 @@ __all__ = [
     "cifar10_resnext65_32x4d",
     "cifar10_resnext101_16x8d",
     "cifar10_resnext101_32x4d",
+    # pascalvoc
+    "pascalvoc_resnet20",
 ]
 
 
@@ -612,6 +614,21 @@ def cifar10_resnet20(
     _update_default_cifar(kwargs)
     return _resnet(
         "cifar10_resnet20",
+        BasicBlock,
+        [3] * 3,
+        pretrained=pretrained,
+        progress=progress,
+        inplanes=16,
+        **kwargs,
+    )
+
+
+def pascalvoc_resnet20(
+    pretrained: bool = False, progress: bool = True, **kwargs
+) -> BcosResNet:
+    _update_default_cifar(kwargs)
+    return _resnet(
+        "pascalvoc_resnet20",
         BasicBlock,
         [3] * 3,
         pretrained=pretrained,

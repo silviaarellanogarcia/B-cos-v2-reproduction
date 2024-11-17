@@ -82,6 +82,7 @@ class BcosConv2d(DetachableModule):
         **kwargs,  # bias is always False
     ):
         print("B parameter: %s" % b)
+        print("MAXOUT parameter: %s" % max_out)
         assert max_out > 0, f"max_out should be greater than 0, was {max_out}"
         super().__init__()
 

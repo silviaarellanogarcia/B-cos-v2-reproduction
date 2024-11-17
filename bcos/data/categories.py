@@ -19,6 +19,30 @@ CIFAR10_CATEGORIES = [
     "truck",
 ]
 
+# PASCALVOC dataset categories
+PASCALVOC_CATEGORIES  = [
+    "person",
+    "bird",
+    "cat",
+    "cow",
+    "dog",
+    "horse",
+    "sheep",
+    "aeroplane",
+    "bicycle",
+    "boat",
+    "bus",
+    "car",
+    "motorbike",
+    "train",
+    "bottle",
+    "chair",
+    "diningtable",
+    "pottedplant",
+    "sofa",
+    "tvmonitor",
+]
+
 # Taken from https://github.com/pytorch/vision/blob/11bd2eaa6d6976129836b329b01/torchvision/models/_meta.py
 IMAGENET_CATEGORIES = [
     "tench",
