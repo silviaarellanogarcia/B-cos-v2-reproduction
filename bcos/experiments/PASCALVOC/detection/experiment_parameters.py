@@ -4,8 +4,8 @@ from functools import partial
 import torch.nn as nn
 
 from bcos.data.presets import (
-    CIFAR10ClassificationPresetTest,
-    CIFAR10ClassificationPresetTrain,
+    PASCALVOCClassificationPresetEval,
+    PASCALVOCClassificationPresetTrain,
 )
 from bcos.experiments.utils import (
     configs_cli,
@@ -19,22 +19,23 @@ from bcos.optim import LRSchedulerFactory, OptimizerFactory
 import os
 
 B_PARAMETER = float(os.environ.get("B_PARAMETER", "2"))
-MAXOUT_PARAMETER = int(os.environ.get("MAXOUT_PARAMETER", "1"))
+MAXOUT_PARAMETER = int(os.environ.get("MAXOUT_PARAMETER", "2"))
 
 __all__ = ["CONFIGS"]
 
-NUM_CLASSES = 10
+NUM_CLASSES = 20
 
 # This config is based on
 # https://github.com/moboehle/B-cos/blob/main/experiments/CIFAR10/bcos/experiment_parameters.py
 DEFAULT_NUM_EPOCHS = 100
 DEFAULT_LR = 1e-3
 DEFAULT_BATCH_SIZE = 64
+DEFAULT_CROP_SIZE = 224
 
 DEFAULTS = dict(
     data=dict(
-        train_transform=CIFAR10ClassificationPresetTrain(is_bcos=True),
-        test_transform=CIFAR10ClassificationPresetTest(is_bcos=True),
+        train_transform=PASCALVOCClassificationPresetTrain(is_bcos=True, crop_size=DEFAULT_CROP_SIZE),
+        test_transform=PASCALVOCClassificationPresetEval(is_bcos=True, crop_size=DEFAULT_CROP_SIZE),
         batch_size=DEFAULT_BATCH_SIZE,
         num_workers=4,
         num_classes=NUM_CLASSES,
@@ -69,7 +70,7 @@ def update_default(new_config):
     return update_config(DEFAULTS, new_config)
 
 
-RESNET_DEPTHS = [20, 32, 44, 56]
+RESNET_DEPTHS = [20, ]
 NORMS_MAP = {
     # centered
     "an": norms.centered_norms.AllNorm2d,

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # List of ResNet models to evaluate
-EXTRA=("-linear")
+EXTRA=("" "-linear")
 NORM=("an" "bn" "gn" "in" "ln" "pn" "anu" "bnu" "gnu" "inu" "lnu" "pnu")
 
 export GPU_NUMBER=0
