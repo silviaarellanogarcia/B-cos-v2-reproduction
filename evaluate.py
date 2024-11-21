@@ -8,6 +8,11 @@ try:
 except ImportError:
     tqdm = lambda x: x  # noqa: E731
 
+import os
+from torchmetrics.detection.mean_ap import MeanAveragePrecision
+import numpy as np
+import cv2
+
 from bcos.data.datamodules import ClassificationDataModule
 from bcos.experiments.utils import Experiment
 
@@ -32,7 +37,7 @@ def get_parser(add_help=True):
     )
     parser.add_argument(
         "--dataset",
-        choices=["ImageNet", "CIFAR10"],
+        choices=["ImageNet", "CIFAR10", "PASCALVOC"],
         default="ImageNet",
         help="The dataset.",
     )
@@ -86,7 +91,70 @@ def run_evaluation(args):
     test_loader = get_test_loader(args.dataset, config)
 
     # do evaluation
-    evaluate(model, test_loader)
+    ROI = os.environ.get("ROI", "false").lower() == 'true'
+    eval_funct = evaluate_mAP if ROI else evaluate
+    eval_funct(model, test_loader)
+
+
+def evaluate_mAP(model, data_loader):
+    from PIL import ImageDraw, Image
+    import matplotlib.pyplot as plt
+    model.eval()
+    map_metric = MeanAveragePrecision()
+    total_samples = 0
+    for image, target in tqdm(data_loader):
+        image = image.to(device, non_blocking=True)
+
+        output = model.explain(image)
+        final_mask = output['explanation'][..., 3]
+        # gray_scale = output['explanation'][..., :3].mean(axis=-1)
+        
+        # final_mask = (gray_scale + alpha_channel) / 2.0
+        rois_pred = {
+            "boxes": [],
+            "scores": [],
+            "labels": [],
+        }
+        img = np.transpose(image[0][:3].detach().cpu().numpy(), (1, 2, 0))
+        img = (img * 255).clip(0, 255).astype(np.uint8)
+        img = Image.fromarray(img)
+        draw = ImageDraw.Draw(img)
+        for thresh in np.arange(0.95, 1.0, 0.05):
+            thresh_mask = final_mask > thresh
+            contours, _ = cv2.findContours(thresh_mask.astype(np.uint8), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+            for contour in contours:
+                x,y,w,h = cv2.boundingRect(contour)
+                rois_pred["boxes"].append([x, y, x + w, y + h])
+                rois_pred["scores"].append(thresh)
+                rois_pred["labels"].append(target['labels'][0][0].item())
+                draw.rectangle((x,y,x+w,y+h), outline="green", width=10)
+        plt.imshow(np.array(img))
+        plt.savefig("example_plot.png")
+        plt.imshow(final_mask)
+        plt.savefig("example_plot2.png")
+        
+        rois_pred["boxes"] = torch.tensor(rois_pred["boxes"], dtype=torch.float32)
+        rois_pred["scores"] = torch.tensor(rois_pred["scores"], dtype=torch.float32)
+        rois_pred["labels"] = torch.tensor(rois_pred["labels"], dtype=torch.int64)
+                
+        total_samples += image.shape[0]
+        target = {
+            'labels': target['labels'][0],
+            'boxes': target['boxes'][0],
+        }
+        map_metric.update([rois_pred], [target])
+        if total_samples > 250:
+            break
+        
+    map_result = map_metric.compute()
+    print(
+        f"Out of a total of {total_samples}, mAP result:"
+    )
+    print()
+    print("--------------------------------------------")
+    print(map_result)
+    print("--------------------------------------------")
+    print()
 
 
 def evaluate(model, data_loader):

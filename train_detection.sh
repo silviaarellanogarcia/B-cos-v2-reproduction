@@ -1,0 +1,3 @@
+# PASCALVOC_PATH="../pascalvoc/" B_PARAMETER="1.25" MAXOUT_PARAMETER="2" python train.py --dataset PASCALVOC --base_network detection --experiment_name resnet_20_lnu-linear > results/detection/resnet_20_lnu-linear-train.txt
+# PASCALVOC_PATH="../pascalvoc/" B_PARAMETER="1.25" MAXOUT_PARAMETER="2" python evaluate.py --dataset PASCALVOC --experiment_name resnet_20_lnu-linear --base_network detection --reload last > results/detection/resnet_20_lnu-linear-eval.txt
+PASCALVOC_PATH="../pascalvoc/" B_PARAMETER="1.25" MAXOUT_PARAMETER="2" ROI="true" python evaluate.py --dataset PASCALVOC --experiment_name resnet_20_lnu-linear --base_network detection --reload last > results/detection/resnet_20_lnu-linear-map.txt

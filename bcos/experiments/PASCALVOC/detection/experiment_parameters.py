@@ -29,7 +29,7 @@ NUM_CLASSES = 20
 # https://github.com/moboehle/B-cos/blob/main/experiments/CIFAR10/bcos/experiment_parameters.py
 DEFAULT_NUM_EPOCHS = 100
 DEFAULT_LR = 1e-3
-DEFAULT_BATCH_SIZE = 64
+DEFAULT_BATCH_SIZE = 16
 DEFAULT_CROP_SIZE = 224
 
 DEFAULTS = dict(

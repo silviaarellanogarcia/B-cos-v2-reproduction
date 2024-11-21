@@ -1,0 +1,24 @@
+Starting localisation analysis for Namespace(save_path='./bcos/experiments/ImageNet/bcos_final/resnet_50/', reload='best_any', ema=False, explainer_name='Ours', analysis_config='500_3x3', explainer_config='default', batch_size=64, smooth=15, force_confidence_calculation=False, debug=False)
+
+
+No checkpoints found! Trying to load external weights...
+The following args passed to model will be ignored {'is_bcos': True, 'args': {'num_classes': 1000, 'norm_layer': <function BatchNormUncentered2dNoBias at 0x7fc478259d00>, 'logit_bias': -6.906754778648554}, 'name': 'resnet50'}
+Loaded external weights!
+Loading stored confidences
+
+Percentiles of localisation accuracy (25, 50, 75, 100):  [0.87527406 0.91804677 0.94752787 0.99775344]
+
+n_imgs: 9
+sample_size: 500
+do_rescale: False
+conf_thresh: 0.5
+explainer_name: Ours
+explainer_config: default
+smooth: 15
+reload: best_any
+ema: False
+batch_size: 64
+epoch: None
+git_commit: e116acfb038d67c1d870383754465f221196d8d5
+Saved results to 'bcos/experiments/ImageNet/bcos_final/resnet_50/localisation_analysis/epoch_None/500_3x3/Ours/smooth-15/default'
+Took time: 258.35s

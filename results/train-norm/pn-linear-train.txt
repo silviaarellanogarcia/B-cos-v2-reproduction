@@ -1,0 +1,93 @@
+B parameter: 1.25
+MAXOUT parameter: 2
+B parameter: 1.25
+MAXOUT parameter: 2
+B parameter: 1.25
+MAXOUT parameter: 2
+B parameter: 1.25
+MAXOUT parameter: 2
+B parameter: 1.25
+MAXOUT parameter: 2
+B parameter: 1.25
+MAXOUT parameter: 2
+B parameter: 1.25
+MAXOUT parameter: 2
+B parameter: 1.25
+MAXOUT parameter: 2
+B parameter: 1.25
+MAXOUT parameter: 2
+B parameter: 1.25
+MAXOUT parameter: 2
+B parameter: 1.25
+MAXOUT parameter: 2
+B parameter: 1.25
+MAXOUT parameter: 2
+B parameter: 1.25
+MAXOUT parameter: 2
+B parameter: 1.25
+MAXOUT parameter: 2
+B parameter: 1.25
+MAXOUT parameter: 2
+B parameter: 1.25
+MAXOUT parameter: 2
+B parameter: 1.25
+MAXOUT parameter: 2
+B parameter: 1.25
+MAXOUT parameter: 2
+B parameter: 1.25
+MAXOUT parameter: 2
+B parameter: 1.25
+MAXOUT parameter: 2
+B parameter: 1.25
+MAXOUT parameter: 2
+B parameter: 1.25
+MAXOUT parameter: 2
+Files already downloaded and verified
+Files already downloaded and verified
+B parameter: 1.25
+MAXOUT parameter: 2
+B parameter: 1.25
+MAXOUT parameter: 2
+B parameter: 1.25
+MAXOUT parameter: 2
+B parameter: 1.25
+MAXOUT parameter: 2
+B parameter: 1.25
+MAXOUT parameter: 2
+B parameter: 1.25
+MAXOUT parameter: 2
+B parameter: 1.25
+MAXOUT parameter: 2
+B parameter: 1.25
+MAXOUT parameter: 2
+B parameter: 1.25
+MAXOUT parameter: 2
+B parameter: 1.25
+MAXOUT parameter: 2
+B parameter: 1.25
+MAXOUT parameter: 2
+B parameter: 1.25
+MAXOUT parameter: 2
+B parameter: 1.25
+MAXOUT parameter: 2
+B parameter: 1.25
+MAXOUT parameter: 2
+B parameter: 1.25
+MAXOUT parameter: 2
+B parameter: 1.25
+MAXOUT parameter: 2
+B parameter: 1.25
+MAXOUT parameter: 2
+B parameter: 1.25
+MAXOUT parameter: 2
+B parameter: 1.25
+MAXOUT parameter: 2
+B parameter: 1.25
+MAXOUT parameter: 2
+B parameter: 1.25
+MAXOUT parameter: 2
+B parameter: 1.25
+MAXOUT parameter: 2
+Files already downloaded and verified
+Files already downloaded and verified
+Sanity Checking: |          | 0/? [00:00<?, ?it/s]Sanity Checking:   0%|          | 0/2 [00:00<?, ?it/s]Sanity Checking DataLoader 0:   0%|          | 0/2 [00:00<?, ?it/s]Sanity Checking DataLoader 0: 100%|██████████| 2/2 [00:00<00:00,  5.92it/s]                                                                           

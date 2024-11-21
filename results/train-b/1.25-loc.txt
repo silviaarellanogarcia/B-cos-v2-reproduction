@@ -1,0 +1,69 @@
+Starting localisation analysis for Namespace(save_path='./experiments/CIFAR10/norm_ablations_final/resnet_20/', reload='best_any', ema=False, explainer_name='Ours', analysis_config='500_3x3', explainer_config='default', batch_size=64, smooth=15, force_confidence_calculation=False, debug=False)
+
+
+B parameter: 1.25
+MAXOUT parameter: 2
+B parameter: 1.25
+MAXOUT parameter: 2
+B parameter: 1.25
+MAXOUT parameter: 2
+B parameter: 1.25
+MAXOUT parameter: 2
+B parameter: 1.25
+MAXOUT parameter: 2
+B parameter: 1.25
+MAXOUT parameter: 2
+B parameter: 1.25
+MAXOUT parameter: 2
+B parameter: 1.25
+MAXOUT parameter: 2
+B parameter: 1.25
+MAXOUT parameter: 2
+B parameter: 1.25
+MAXOUT parameter: 2
+B parameter: 1.25
+MAXOUT parameter: 2
+B parameter: 1.25
+MAXOUT parameter: 2
+B parameter: 1.25
+MAXOUT parameter: 2
+B parameter: 1.25
+MAXOUT parameter: 2
+B parameter: 1.25
+MAXOUT parameter: 2
+B parameter: 1.25
+MAXOUT parameter: 2
+B parameter: 1.25
+MAXOUT parameter: 2
+B parameter: 1.25
+MAXOUT parameter: 2
+B parameter: 1.25
+MAXOUT parameter: 2
+B parameter: 1.25
+MAXOUT parameter: 2
+B parameter: 1.25
+MAXOUT parameter: 2
+B parameter: 1.25
+MAXOUT parameter: 2
+Loaded epoch: 77 
+With validation accuracy: 90.08%
+No confidences file found, calculating now.
+Files already downloaded and verified
+Files already downloaded and verified
+
+Percentiles of localisation accuracy (25, 50, 75, 100):  [0.90698256 0.96040234 0.98496875 1.        ]
+
+n_imgs: 9
+sample_size: 500
+do_rescale: False
+conf_thresh: 0.5
+explainer_name: Ours
+explainer_config: default
+smooth: 15
+reload: best_any
+ema: False
+batch_size: 64
+epoch: 78
+git_commit: ef0fd99685f05c36d96e4f0135d995df24e04b44
+Saved results to 'experiments/CIFAR10/norm_ablations_final/resnet_20/localisation_analysis/epoch_78/500_3x3/Ours/smooth-15/default'
+Took time: 89.30s

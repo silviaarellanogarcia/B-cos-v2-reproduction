@@ -87,7 +87,8 @@ class ImageNetClassificationPresetTrain:
         return result
 
 class PASCALVOCClassificationPresetTrain(ImageNetClassificationPresetTrain):
-    pass
+    def __call__(self, img, lbl):
+        return self.transforms(img), lbl
 
 class ImageNetClassificationPresetEval:
     def __init__(
@@ -162,7 +163,8 @@ class ImageNetClassificationPresetEval:
 
 
 class PASCALVOCClassificationPresetEval(ImageNetClassificationPresetEval):
-    pass
+    def __call__(self, img, lbl):
+        return self.transforms(img), lbl
 
 
 CIFAR10_MEAN = (0.49139968, 0.48215841, 0.44653091)
