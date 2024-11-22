@@ -1,6 +1,11 @@
 bcos/data/imagenet_mini
 bcos/data/imagenet_big
+bcos/data/cifar10
 bcos/experiments/CIFAR10/norm_ablations_final/resnet_20_lnu-linear/last.ckpt
+bcos/data/cifar10_adversarial_epsilon_01
+bcos/data/cifar10_adversarial_epsilon_03
+bcos/data/data/cifar-10-batches-py
+bcos/data/data/cifar-10-python.tar.gz
 # wandb stuff
 wandb/
 

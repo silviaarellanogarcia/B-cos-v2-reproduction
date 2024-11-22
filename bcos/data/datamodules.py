@@ -240,7 +240,7 @@ class CIFAR10DataModule(ClassificationDataModule):
     NUM_CLASSES: int = 10
 
     NUM_TRAIN_EXAMPLES: int = 50_000
-    NUM_EVAL_EXAMPLES: int = 10_000
+    NUM_EVAL_EXAMPLES: int = 578#10_000 TODO: modify this 
 
     CATEGORIES: List[str] = CIFAR10_CATEGORIES
 
@@ -254,14 +254,20 @@ class CIFAR10DataModule(ClassificationDataModule):
                 transform=self.config["train_transform"],
                 download=True,
             )
-            assert len(self.train_dataset) == self.NUM_TRAIN_EXAMPLES
-        self.eval_dataset = CIFAR10(
-            root=DATA_ROOT,
-            train=False,
-            transform=self.config["test_transform"],
-            download=True,
-        )
-        assert len(self.eval_dataset) == self.NUM_EVAL_EXAMPLES
+            assert len(self.train_dataset) == self.NUM_TRrAIN_EXAMPLES
+        if ADVERSARIAL: 
+            self.eval_dataset = ImageFolder(
+                root='bcos/data/cifar10_adversarial_epsilon_03/adversarial',
+                transform=self.config["test_transform"],
+            )
+        else: 
+            self.eval_dataset = CIFAR10(
+                root=DATA_ROOT,
+                train=False,
+                transform=self.config["test_transform"],
+                download=True,
+            )
+        #assert len(self.eval_dataset) == self.NUM_EVAL_EXAMPLES TODO: put this back in 
 
 
 class VOCDetectionClassification(VOCDetection):

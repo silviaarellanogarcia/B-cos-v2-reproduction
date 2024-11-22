@@ -1,7 +1,4 @@
 {
-    // Use IntelliSense to learn about possible attributes.
-    // Hover to view descriptions of existing attributes.
-    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
         {
@@ -11,12 +8,18 @@
             "program": "${file}",
             "console": "integratedTerminal",
             "args": [
-                "${command:pickArgs}"
+                "--dataset", "CIFAR10",
+                "--reload", "last",
+                "--base_network", "norm_ablations_final",
+                "--experiment_name", "resnet_20_lnu-linear",
             ],
             "env": {
-
+                "DATA_ROOT": "/Users/rosameliacarioni/University/MSc/2_year/2_period/advanced_deep_learning/B-cos-v2-reproduction/bcos/data/cifar10",
+                "B_PARAMETER": "1.25",
+                "MAXOUT_PARAMETER": "2",
+                "ADVERSARIAL": "true"
             },
-            "python": 
+            "python": "/Users/rosameliacarioni/miniconda3/envs/b_cos/bin/python"
         }
     ]
 }
