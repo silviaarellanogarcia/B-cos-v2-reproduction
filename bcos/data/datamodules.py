@@ -18,8 +18,11 @@ from torchvision.datasets import CIFAR10, ImageFolder, VOCDetection
 import torch
 
 import bcos.settings as settings
+try:
+    from .categories import CIFAR10_CATEGORIES, IMAGENET_CATEGORIES, PASCALVOC_CATEGORIES
+except:
+    from categories import CIFAR10_CATEGORIES, IMAGENET_CATEGORIES, PASCALVOC_CATEGORIES
 
-from .categories import CIFAR10_CATEGORIES, IMAGENET_CATEGORIES, PASCALVOC_CATEGORIES
 from .sampler import RASampler
 from .transforms import RandomCutmix, RandomMixup, SplitAndGrid
 
@@ -177,7 +180,7 @@ class ImageNetDataModule(ClassificationDataModule):
     NUM_CLASSES: int = 1000
 
     NUM_TRAIN_EXAMPLES: int = 34_745
-    NUM_EVAL_EXAMPLES: int = 50_000
+    NUM_EVAL_EXAMPLES: int = 1000 #mini: 3923# normal:50_000
 
     CATEGORIES: List[str] = IMAGENET_CATEGORIES
 
@@ -201,6 +204,10 @@ class ImageNetDataModule(ClassificationDataModule):
 
     def setup(self, stage: str) -> None:
         # this way changes to the settings are reflected at function call time
+        DATA_ROOT = settings.DATA_ROOT
+        ADVERSARIAL_EVALUATE = os.environ.get("ADVERSARIAL_EVALUATE", "false").lower() == 'true'
+        ADVERSARIAL_PLOT = os.environ.get("ADVERSARIAL_PLOT", "false").lower() == 'true'
+
         SHMTMPDIR = settings.SHMTMPDIR
         IMAGENET_PATH = settings.IMAGENET_PATH
         if stage == "fit":
@@ -224,13 +231,24 @@ class ImageNetDataModule(ClassificationDataModule):
 
                 self.train_dataset = CachedImageFolder(self.train_dataset)
                 rank_zero_info("Successfully setup cached dataset!")
-
         start = time.perf_counter()
         rank_zero_info("Setting up ImageNet val dataset...")
-        self.eval_dataset = ImageFolder(
-            root=os.path.join(IMAGENET_PATH, "val"),
-            transform=self.config["test_transform"],
-        )
+
+        if ADVERSARIAL_EVALUATE: 
+            self.eval_dataset = ImageFolder(
+                root=DATA_ROOT,
+                transform=self.config["test_transform"],
+            )
+        elif ADVERSARIAL_PLOT:
+            self.eval_dataset = ImageFolder(
+                root=DATA_ROOT,
+                transform=self.config["test_transform"],
+            )
+        else: 
+            self.eval_dataset = ImageFolder(
+                root=os.path.join(IMAGENET_PATH, "val"),
+                transform=self.config["test_transform"],
+            )
         assert len(self.eval_dataset) == self.NUM_EVAL_EXAMPLES
         rank_zero_info(f"Done! Took time {time.perf_counter() - start:.2f}s")
 
@@ -240,13 +258,15 @@ class CIFAR10DataModule(ClassificationDataModule):
     NUM_CLASSES: int = 10
 
     NUM_TRAIN_EXAMPLES: int = 50_000
-    NUM_EVAL_EXAMPLES: int = 578#10_000 TODO: modify this 
+    NUM_EVAL_EXAMPLES: int = 10_000 
 
     CATEGORIES: List[str] = CIFAR10_CATEGORIES
 
     def setup(self, stage: str) -> None:
         DATA_ROOT = settings.DATA_ROOT
-        ADVERSARIAL = os.environ.get('ADVERSARIAL')
+        ADVERSARIAL_EVALUATE = os.environ.get("ADVERSARIAL_EVALUATE", "false").lower() == 'true'
+        ADVERSARIAL_PLOT = os.environ.get("ADVERSARIAL_PLOT", "false").lower() == 'true'
+
         if stage == "fit":
             self.train_dataset = CIFAR10(
                 root=DATA_ROOT,
@@ -255,9 +275,14 @@ class CIFAR10DataModule(ClassificationDataModule):
                 download=True,
             )
             assert len(self.train_dataset) == self.NUM_TRrAIN_EXAMPLES
-        if ADVERSARIAL: 
+        if ADVERSARIAL_EVALUATE: 
             self.eval_dataset = ImageFolder(
-                root='bcos/data/cifar10_adversarial_epsilon_03/adversarial',
+                root=DATA_ROOT,
+                transform=self.config["test_transform"],
+            )
+        elif ADVERSARIAL_PLOT:
+            self.eval_dataset = ImageFolder(
+                root=DATA_ROOT,
                 transform=self.config["test_transform"],
             )
         else: 
@@ -267,7 +292,7 @@ class CIFAR10DataModule(ClassificationDataModule):
                 transform=self.config["test_transform"],
                 download=True,
             )
-        #assert len(self.eval_dataset) == self.NUM_EVAL_EXAMPLES TODO: put this back in 
+        assert len(self.eval_dataset) == self.NUM_EVAL_EXAMPLES
 
 
 class VOCDetectionClassification(VOCDetection):

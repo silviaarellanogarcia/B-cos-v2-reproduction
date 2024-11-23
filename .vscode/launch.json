@@ -8,16 +8,13 @@
             "program": "${file}",
             "console": "integratedTerminal",
             "args": [
-                "--dataset", "CIFAR10",
-                "--reload", "last",
-                "--base_network", "norm_ablations_final",
-                "--experiment_name", "resnet_20_lnu-linear",
+                "--dataset", "ImageNet",
+                "--hubconf", "resnet18", 
             ],
             "env": {
-                "DATA_ROOT": "/Users/rosameliacarioni/University/MSc/2_year/2_period/advanced_deep_learning/B-cos-v2-reproduction/bcos/data/cifar10",
-                "B_PARAMETER": "1.25",
-                "MAXOUT_PARAMETER": "2",
-                "ADVERSARIAL": "true"
+                "DATA_ROOT": "/Users/rosameliacarioni/University/MSc/2_year/2_period/advanced_deep_learning/B-cos-v2-reproduction/bcos/data/imagenet_mini_adversarial_epsilon_05",
+                "ADVERSARIAL_PLOT": "true", 
+                "ADVERSARIAL_EVALUATE": "false", 
             },
             "python": "/Users/rosameliacarioni/miniconda3/envs/b_cos/bin/python"
         }
