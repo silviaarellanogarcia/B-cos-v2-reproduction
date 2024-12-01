@@ -309,9 +309,9 @@ class Experiment:
         # use inspect to check if the model factory has a `pretrained` argument
         # if it does, then we pass it to the model factory
         # otherwise, we just pass it to the model constructor
-        # model_factory = self._get_model
+        model_factory = self._get_model
         from bcos.models.pretrained import _get_model
-        model_factory = _get_model
+        # model_factory = _get_model
         model_factory_signature = inspect.signature(model_factory)
         if "pretrained" in model_factory_signature.parameters:
             model_config = self.config["model"]
