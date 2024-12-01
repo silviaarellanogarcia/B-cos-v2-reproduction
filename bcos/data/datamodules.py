@@ -13,15 +13,17 @@ except ImportError:
 
 import torch.utils.data as data
 import torchvision
-from torchvision.datasets import CIFAR10, ImageFolder
+from torchvision.datasets import CIFAR10, ImageFolder, VOCDetection
+
+import torch
 
 import bcos.settings as settings
 
-from .categories import CIFAR10_CATEGORIES, IMAGENET_CATEGORIES
+from .categories import CIFAR10_CATEGORIES, IMAGENET_CATEGORIES, PASCALVOC_CATEGORIES
 from .sampler import RASampler
 from .transforms import RandomCutmix, RandomMixup, SplitAndGrid
 
-__all__ = ["ImageNetDataModule", "CIFAR10DataModule", "ClassificationDataModule"]
+__all__ = ["ImageNetDataModule", "CIFAR10DataModule", "ClassificationDataModule", "PASCALVOCDataModule"]
 
 
 class ClassificationDataModule(pl.LightningDataModule):
@@ -175,7 +177,7 @@ class ImageNetDataModule(ClassificationDataModule):
     NUM_CLASSES: int = 1000
 
     NUM_TRAIN_EXAMPLES: int = 34_745
-    NUM_EVAL_EXAMPLES: int = 3_923
+    NUM_EVAL_EXAMPLES: int = 50_000
 
     CATEGORIES: List[str] = IMAGENET_CATEGORIES
 
@@ -244,6 +246,7 @@ class CIFAR10DataModule(ClassificationDataModule):
 
     def setup(self, stage: str) -> None:
         DATA_ROOT = settings.DATA_ROOT
+        ADVERSARIAL = os.environ.get('ADVERSARIAL')
         if stage == "fit":
             self.train_dataset = CIFAR10(
                 root=DATA_ROOT,
@@ -252,11 +255,101 @@ class CIFAR10DataModule(ClassificationDataModule):
                 download=True,
             )
             assert len(self.train_dataset) == self.NUM_TRAIN_EXAMPLES
-
         self.eval_dataset = CIFAR10(
             root=DATA_ROOT,
             train=False,
             transform=self.config["test_transform"],
             download=True,
+        )
+        assert len(self.eval_dataset) == self.NUM_EVAL_EXAMPLES
+
+
+class VOCDetectionClassification(VOCDetection):
+    CLASS_TO_IDX = {name: idx for idx, name in enumerate(PASCALVOC_CATEGORIES)}
+    
+    def __getitem__(self, idx):
+        image, target = super().__getitem__(idx)
+        
+        objects = target['annotation']['object']
+        
+        # Ensure objects are always a list
+        if not isinstance(objects, list):
+            objects = [objects]
+        
+        # Find the object with the largest bounding box
+        largest_area = 0
+        largest_label = None
+        for obj in objects:
+            bbox = obj['bndbox']
+            xmin, ymin = int(bbox['xmin']), int(bbox['ymin'])
+            xmax, ymax = int(bbox['xmax']), int(bbox['ymax'])
+            
+            # Calculate area of the bounding box
+            area = (xmax - xmin) * (ymax - ymin)
+            if area > largest_area:
+                largest_area = area
+                largest_label = obj['name']
+        
+        return image, self.CLASS_TO_IDX[largest_label]
+
+
+class PascalVOCDatasetROI(VOCDetection):
+    CLASS_TO_IDX = {name: idx for idx, name in enumerate(PASCALVOC_CATEGORIES)}
+    
+    def __getitem__(self, idx):
+        image, target = super().__getitem__(idx)
+
+        # Parse VOC annotations into the format required
+        objects = target["annotation"]["object"]
+        if not isinstance(objects, list):
+            objects = [objects]
+
+        boxes = []
+        labels = []
+        for obj in objects:
+            bbox = obj["bndbox"]
+            boxes.append([
+                float(bbox["xmin"]),
+                float(bbox["ymin"]),
+                float(bbox["xmax"]),
+                float(bbox["ymax"]),
+            ])
+            labels.append(self.CLASS_TO_IDX[obj["name"]])
+
+        return image, {
+                "boxes": torch.tensor(boxes, dtype=torch.float32),
+                "labels": torch.tensor(labels, dtype=torch.int64),
+            }
+
+
+class PASCALVOCDataModule(ClassificationDataModule):
+    # from https://www.cs.toronto.edu/~kriz/cifar.html
+    NUM_CLASSES: int = 20
+
+    NUM_TRAIN_EXAMPLES: int = 5_717
+    NUM_EVAL_EXAMPLES: int = 5_823
+
+    CATEGORIES: List[str] = PASCALVOC_CATEGORIES
+
+    def setup(self, stage: str) -> None:
+        PASCALVOC_PATH = os.environ.get("PASCALVOC_PATH")
+        self.ROI = os.environ.get("ROI", "false").lower() == 'true'
+        VOCDATASET = PascalVOCDatasetROI if self.ROI else VOCDetectionClassification
+        if stage == "fit":
+            self.train_dataset = VOCDATASET(
+                root=PASCALVOC_PATH,
+                year="2012",
+                image_set="train",
+                download=True,
+                transforms=self.config["train_transform"]
+            )
+            assert len(self.train_dataset) == self.NUM_TRAIN_EXAMPLES
+
+        self.eval_dataset = VOCDATASET(
+            root=PASCALVOC_PATH,
+            year="2012",
+            image_set="val",
+            download=True,
+            transforms=self.config["test_transform"]
         )
         assert len(self.eval_dataset) == self.NUM_EVAL_EXAMPLES

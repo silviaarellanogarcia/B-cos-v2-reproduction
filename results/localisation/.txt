@@ -1,0 +1,4 @@
+Starting localisation analysis for Namespace(save_path='./bcos/experiments/ImageNet/bcos_final/vgg_11_bnu/', reload='best_any', ema=False, explainer_name='Ours', analysis_config='500_3x3', explainer_config='default', batch_size=64, smooth=15, force_confidence_calculation=False, debug=False)
+
+
+No checkpoints found! Trying to load external weights...

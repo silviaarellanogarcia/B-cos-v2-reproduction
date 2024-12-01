@@ -39,6 +39,7 @@ class BcosVGG(BcosUtilMixin, nn.Module):
         conv_layer: Callable[..., nn.Module] = None,
         logit_bias: Optional[float] = None,
         logit_temperature: Optional[float] = None,
+        **kwargs
     ) -> None:
         super(BcosVGG, self).__init__()
         self.features = features

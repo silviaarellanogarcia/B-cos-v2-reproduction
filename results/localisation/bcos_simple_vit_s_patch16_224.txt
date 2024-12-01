@@ -1,0 +1,23 @@
+Starting localisation analysis for Namespace(save_path='./bcos/experiments/ImageNet/vit_final/bcos_simple_vit_s_patch16_224/', reload='best_any', ema=False, explainer_name='Ours', analysis_config='500_2x2', explainer_config='default', batch_size=64, smooth=15, force_confidence_calculation=False, debug=False)
+
+
+No checkpoints found! Trying to load external weights...
+Loaded external weights!
+No confidences file found, calculating now.
+
+Percentiles of localisation accuracy (25, 50, 75, 100):  [0.14637908 0.24065592 0.35485599 0.82812059]
+
+n_imgs: 4
+sample_size: 500
+do_rescale: False
+conf_thresh: 0.5
+explainer_name: Ours
+explainer_config: default
+smooth: 15
+reload: best_any
+ema: False
+batch_size: 64
+epoch: None
+git_commit: 51fcce20226521c6a96f1a8fdb5f750fc11a2963
+Saved results to 'bcos/experiments/ImageNet/vit_final/bcos_simple_vit_s_patch16_224/localisation_analysis/epoch_None/500_2x2/Ours/smooth-15/default'
+Took time: 96.88s

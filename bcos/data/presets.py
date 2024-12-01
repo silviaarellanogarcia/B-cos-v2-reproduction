@@ -86,6 +86,9 @@ class ImageNetClassificationPresetTrain:
         result["interpolation"] = str(result["interpolation"])
         return result
 
+class PASCALVOCClassificationPresetTrain(ImageNetClassificationPresetTrain):
+    def __call__(self, img, lbl):
+        return self.transforms(img), lbl
 
 class ImageNetClassificationPresetEval:
     def __init__(
@@ -157,6 +160,38 @@ class ImageNetClassificationPresetEval:
         )
         result["interpolation"] = str(result["interpolation"])
         return result
+
+
+class PASCALVOCClassificationPresetEval(ImageNetClassificationPresetEval):
+    def __call__(self, image, target):
+        import os
+        original_width, original_height = image.size
+        
+        image = self.transforms(image)
+        ROI = os.environ.get("ROI", "false").lower() == 'true'
+        if ROI:
+            _, new_height, new_width = image.shape
+            # Update bounding boxes to match new image dimensions
+            if "annotation" in target and "object" in target["annotation"]:
+                for obj in target["annotation"]["object"]:
+                    bbox = obj["bndbox"]
+                    # Convert bounding box values to integers
+                    bbox = [int(bbox[k]) for k in ["xmin", "ymin", "xmax", "ymax"]]
+
+                    # Scale bounding box coordinates
+                    bbox[0] = int(bbox[0] * new_width / original_width)  # xmin
+                    bbox[1] = int(bbox[1] * new_height / original_height)  # ymin
+                    bbox[2] = int(bbox[2] * new_width / original_width)  # xmax
+                    bbox[3] = int(bbox[3] * new_height / original_height)  # ymax
+
+                    # Update bounding box in the target
+                    obj["bndbox"] = {
+                        "xmin": bbox[0],
+                        "ymin": bbox[1],
+                        "xmax": bbox[2],
+                        "ymax": bbox[3],
+                    }
+        return image, target
 
 
 CIFAR10_MEAN = (0.49139968, 0.48215841, 0.44653091)

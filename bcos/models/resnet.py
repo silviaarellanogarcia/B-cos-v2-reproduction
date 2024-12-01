@@ -7,6 +7,7 @@ CIFAR10 modifications from
 https://github.com/chenyaofo/pytorch-cifar-models/blob/e9482ebc665084761ad9c84d36c83cbb82/pytorch_cifar_models/resnet.py
 """
 import math
+import os
 from typing import Any, Callable, List, Optional, Type, Union
 
 import torch.nn as nn
@@ -42,6 +43,8 @@ __all__ = [
     "cifar10_resnext65_32x4d",
     "cifar10_resnext101_16x8d",
     "cifar10_resnext101_32x4d",
+    # pascalvoc
+    "pascalvoc_resnet20",
 ]
 
 
@@ -259,6 +262,8 @@ class BcosResNet(BcosUtilMixin, nn.Module):
         **kwargs: Any,  # ignore rest
     ):
         super().__init__()
+        if os.environ.get('ADDINVERSE', 'true').lower() != 'true':
+            in_chans = 3
 
         if kwargs:
             print("The following args passed to model will be ignored", kwargs)
@@ -612,6 +617,21 @@ def cifar10_resnet20(
     _update_default_cifar(kwargs)
     return _resnet(
         "cifar10_resnet20",
+        BasicBlock,
+        [3] * 3,
+        pretrained=pretrained,
+        progress=progress,
+        inplanes=16,
+        **kwargs,
+    )
+
+
+def pascalvoc_resnet20(
+    pretrained: bool = False, progress: bool = True, **kwargs
+) -> BcosResNet:
+    _update_default_cifar(kwargs)
+    return _resnet(
+        "pascalvoc_resnet20",
         BasicBlock,
         [3] * 3,
         pretrained=pretrained,

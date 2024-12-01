@@ -227,7 +227,7 @@ class Experiment:
                 warnings.warn("No checkpoints found! Returning model only.")
             try:
                 # if no training checkpoints available, then we try to load external weights
-                model = self._try_load_external_weights(verbose, reload=reload, ema=ema)
+                model = self._try_load_external_weights(verbose, reload=reload, ema=ema, model=model)
                 return (
                     model
                     if not return_training_ckpt_if_possible
@@ -310,10 +310,12 @@ class Experiment:
         # if it does, then we pass it to the model factory
         # otherwise, we just pass it to the model constructor
         model_factory = self._get_model
+        from bcos.models.pretrained import _get_model
+        # model_factory = _get_model
         model_factory_signature = inspect.signature(model_factory)
         if "pretrained" in model_factory_signature.parameters:
             model_config = self.config["model"]
-            model = model_factory(model_config, pretrained=True)
+            model = model_factory(experiment_name=self.experiment_name, pretrained=True, progress=True, base_network=self.base_network, dataset=self.dataset, **model_config)
         else:
             if verbose:
                 print("No pretrained argument found in model factory!")

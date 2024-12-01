@@ -1,0 +1,53 @@
+B parameter: 2.0
+MAXOUT parameter: 2
+B parameter: 2.0
+MAXOUT parameter: 2
+B parameter: 2.0
+MAXOUT parameter: 2
+B parameter: 2.0
+MAXOUT parameter: 2
+B parameter: 2.0
+MAXOUT parameter: 2
+B parameter: 2.0
+MAXOUT parameter: 2
+B parameter: 2.0
+MAXOUT parameter: 2
+B parameter: 2.0
+MAXOUT parameter: 2
+B parameter: 2.0
+MAXOUT parameter: 2
+B parameter: 2.0
+MAXOUT parameter: 2
+B parameter: 2.0
+MAXOUT parameter: 2
+B parameter: 2.0
+MAXOUT parameter: 2
+B parameter: 2.0
+MAXOUT parameter: 2
+B parameter: 2.0
+MAXOUT parameter: 2
+B parameter: 2.0
+MAXOUT parameter: 2
+B parameter: 2.0
+MAXOUT parameter: 2
+B parameter: 2.0
+MAXOUT parameter: 2
+B parameter: 2.0
+MAXOUT parameter: 2
+B parameter: 2.0
+MAXOUT parameter: 2
+B parameter: 2.0
+MAXOUT parameter: 2
+B parameter: 2.0
+MAXOUT parameter: 2
+B parameter: 2.0
+MAXOUT parameter: 2
+Loaded epoch: 99 
+With validation accuracy: 86.15%
+Files already downloaded and verified
+Out of a total of 10000, got total_correct_top1=8615 and total_correct_top5=9938
+
+--------------------------------------------
+Acc@1 86.150% Acc@5 99.380%
+--------------------------------------------
+

@@ -1,0 +1,54 @@
+B parameter: 1.25
+MAXOUT parameter: 2
+B parameter: 1.25
+MAXOUT parameter: 2
+B parameter: 1.25
+MAXOUT parameter: 2
+B parameter: 1.25
+MAXOUT parameter: 2
+B parameter: 1.25
+MAXOUT parameter: 2
+B parameter: 1.25
+MAXOUT parameter: 2
+B parameter: 1.25
+MAXOUT parameter: 2
+B parameter: 1.25
+MAXOUT parameter: 2
+B parameter: 1.25
+MAXOUT parameter: 2
+B parameter: 1.25
+MAXOUT parameter: 2
+B parameter: 1.25
+MAXOUT parameter: 2
+B parameter: 1.25
+MAXOUT parameter: 2
+B parameter: 1.25
+MAXOUT parameter: 2
+B parameter: 1.25
+MAXOUT parameter: 2
+B parameter: 1.25
+MAXOUT parameter: 2
+B parameter: 1.25
+MAXOUT parameter: 2
+B parameter: 1.25
+MAXOUT parameter: 2
+B parameter: 1.25
+MAXOUT parameter: 2
+B parameter: 1.25
+MAXOUT parameter: 2
+B parameter: 1.25
+MAXOUT parameter: 2
+B parameter: 1.25
+MAXOUT parameter: 2
+B parameter: 1.25
+MAXOUT parameter: 2
+Loaded epoch: 99 
+With validation accuracy: 48.68%
+Using downloaded and verified file: ../pascalvoc/VOCtrainval_11-May-2012.tar
+Extracting ../pascalvoc/VOCtrainval_11-May-2012.tar to ../pascalvoc/
+Out of a total of 5823, got total_correct_top1=2835 and total_correct_top5=4889
+
+--------------------------------------------
+Acc@1 48.686% Acc@5 83.960%
+--------------------------------------------
+
