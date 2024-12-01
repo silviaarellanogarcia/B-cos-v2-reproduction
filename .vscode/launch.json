@@ -1,0 +1,22 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python Debugger: Current File with Arguments",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "args": [
+                "--dataset", "ImageNet",
+                "--hubconf", "resnet18", 
+            ],
+            "env": {
+                "DATA_ROOT": "/Users/rosameliacarioni/University/MSc/2_year/2_period/advanced_deep_learning/B-cos-v2-reproduction/bcos/data/imagenet_mini_adversarial_epsilon_05",
+                "ADVERSARIAL_PLOT": "true", 
+                "ADVERSARIAL_EVALUATE": "false", 
+            },
+            "python": "/Users/rosameliacarioni/miniconda3/envs/b_cos/bin/python"
+        }
+    ]
+}

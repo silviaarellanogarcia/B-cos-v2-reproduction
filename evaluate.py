@@ -1,5 +1,9 @@
 import argparse
 from pathlib import Path
+from PIL import Image
+import os
+import matplotlib.pyplot as plt
+from bcos.data.categories import IMAGENET_CATEGORIES
 
 import torch
 
@@ -91,6 +95,10 @@ def run_evaluation(args):
     test_loader = get_test_loader(args.dataset, config)
 
     # do evaluation
+    ADVERSARIAL_PLOT = os.environ.get("ADVERSARIAL_PLOT", "false").lower() == 'true'
+    if ADVERSARIAL_PLOT:
+        evaluate_explanation(model, test_loader)
+        return None
     ROI = os.environ.get("ROI", "false").lower() == 'true'
     EXPLAIN = os.environ.get("EXPLAIN", "false").lower() == 'true'
     eval_funct = evaluate_mAP if ROI else evaluate
@@ -98,6 +106,63 @@ def run_evaluation(args):
         eval_funct = print_images
     eval_funct(model, test_loader)
 
+
+def evaluate_explanation(model, data_loader):
+    explanation_save_dir = "bcos/data/imagenet_mini_explanation_05"
+    os.makedirs(explanation_save_dir, exist_ok=True)
+
+    model.eval()
+
+    for batch_idx, (image, target) in enumerate(tqdm(data_loader)):       
+        image = image.to(device, non_blocking=True)
+        image.requires_grad = True
+        
+        # CODE TO DISPLAY BOTH ORIGINAL AND MODIFIED CIFAR10 
+        '''
+        original_image = image.squeeze(0).detach().cpu()  # Convert to HWC format
+        if original_image.shape[0] > 3:  # More than 3 channels
+            original_image = original_image[:3, :, :].permute(1, 2, 0).numpy()  # Use only the first 3 channels
+        
+        output = model.explain(image)
+        explanation = output['explanation']
+
+        fig, axes = plt.subplots(1, 2, figsize=(12, 6))
+        axes[0].imshow(original_image)
+        axes[0].set_title("Original Image")
+        axes[0].axis('off')
+        
+        axes[1].imshow(explanation, cmap='viridis')  # Optional: Use a colormap for the explanation
+        axes[1].set_title("Explanation")
+        axes[1].axis('off')
+        
+        image_save_path = os.path.join(explanation_save_dir, f"explanation_{batch_idx}.png")
+        plt.savefig(image_save_path, bbox_inches='tight', pad_inches=0)
+        plt.close()
+        
+        '''
+        
+        # CODE TO DISPLAY ONLY MODFIED IMAGE IMAGENET 
+
+        output = model.explain(image)
+        explanation = output['explanation']
+        predicted_index = output["prediction"]
+        predicted_label = IMAGENET_CATEGORIES[predicted_index]
+        # Plot the explanation
+        fig, ax = plt.subplots(figsize=(6, 6))
+        ax.imshow(explanation, cmap="viridis")  # Display the explanation
+        ax.axis("off")
+        
+        # Add the label as text at the bottom
+        plt.text(
+            0.5, -0.1, predicted_label, fontsize=12, ha="center", transform=ax.transAxes
+        )
+        
+        # Save the explanation
+        image_save_path = os.path.join(explanation_save_dir, f"explanation_{batch_idx}.png")
+        plt.savefig(image_save_path, bbox_inches="tight", pad_inches=0.5)
+        plt.close(fig)
+
+       
 
 def evaluate_mAP(model, data_loader):
     from PIL import ImageDraw, Image

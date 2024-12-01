@@ -1,3 +1,7 @@
+bcos/experiments/CIFAR10/norm_ablations_final/resnet_20_lnu-linear/last.ckpt
+bcos/data/*
+bcos/data/imagenet_mini
+
 # wandb stuff
 wandb/
 
