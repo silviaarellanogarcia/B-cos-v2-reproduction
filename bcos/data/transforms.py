@@ -1,4 +1,5 @@
 import math
+import os
 from typing import Tuple
 
 import torch
@@ -20,7 +21,9 @@ class AddInverse(torch.nn.Module):
         self.dim = dim
 
     def forward(self, in_tensor: Tensor) -> Tensor:
-        return torch.cat([in_tensor, 1 - in_tensor], dim=self.dim)
+        if os.environ.get('ADDINVERSE', 'true').lower() == 'true':
+            return torch.cat([in_tensor, 1 - in_tensor], dim=self.dim)
+        return in_tensor
 
 
 class SplitAndGrid(torch.nn.Module):

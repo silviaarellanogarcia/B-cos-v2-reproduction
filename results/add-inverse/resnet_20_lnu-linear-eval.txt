@@ -43,6 +43,11 @@ MAXOUT parameter: 2
 B parameter: 1.25
 MAXOUT parameter: 2
 Loaded epoch: 99 
-With validation accuracy: 48.68%
-Using downloaded and verified file: ../pascalvoc/VOCtrainval_11-May-2012.tar
-Extracting ../pascalvoc/VOCtrainval_11-May-2012.tar to ../pascalvoc/
+With validation accuracy: 89.88%
+Files already downloaded and verified
+Out of a total of 10000, got total_correct_top1=8988 and total_correct_top5=9929
+
+--------------------------------------------
+Acc@1 89.880% Acc@5 99.290%
+--------------------------------------------
+

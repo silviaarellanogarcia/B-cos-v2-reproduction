@@ -7,6 +7,7 @@ CIFAR10 modifications from
 https://github.com/chenyaofo/pytorch-cifar-models/blob/e9482ebc665084761ad9c84d36c83cbb82/pytorch_cifar_models/resnet.py
 """
 import math
+import os
 from typing import Any, Callable, List, Optional, Type, Union
 
 import torch.nn as nn
@@ -261,6 +262,8 @@ class BcosResNet(BcosUtilMixin, nn.Module):
         **kwargs: Any,  # ignore rest
     ):
         super().__init__()
+        if os.environ.get('ADDINVERSE', 'true').lower() != 'true':
+            in_chans = 3
 
         if kwargs:
             print("The following args passed to model will be ignored", kwargs)

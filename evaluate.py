@@ -92,13 +92,29 @@ def run_evaluation(args):
 
     # do evaluation
     ROI = os.environ.get("ROI", "false").lower() == 'true'
+    EXPLAIN = os.environ.get("EXPLAIN", "false").lower() == 'true'
     eval_funct = evaluate_mAP if ROI else evaluate
+    if EXPLAIN:
+        eval_funct = print_images
     eval_funct(model, test_loader)
 
 
 def evaluate_mAP(model, data_loader):
     from PIL import ImageDraw, Image
     import matplotlib.pyplot as plt
+    
+    MIN_BOX_SIZE = 10  # Minimum width or height of a bounding box
+    def is_nested(box, boxes):
+        """
+        Check if a box is nested inside any other box.
+        """
+        x1, y1, x2, y2 = box
+        for bx in boxes:
+            bx1, by1, bx2, by2 = bx
+            if x1 >= bx1 and y1 >= by1 and x2 <= bx2 and y2 <= by2:
+                return True
+        return False
+    
     model.eval()
     map_metric = MeanAveragePrecision()
     total_samples = 0
@@ -119,20 +135,42 @@ def evaluate_mAP(model, data_loader):
         img = (img * 255).clip(0, 255).astype(np.uint8)
         img = Image.fromarray(img)
         draw = ImageDraw.Draw(img)
-        for thresh in np.arange(0.95, 1.0, 0.05):
+        for thresh in [0.6]:
             thresh_mask = final_mask > thresh
-            contours, _ = cv2.findContours(thresh_mask.astype(np.uint8), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+            contours, _ = cv2.findContours(
+            thresh_mask.astype(np.uint8), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+
             for contour in contours:
-                x,y,w,h = cv2.boundingRect(contour)
-                rois_pred["boxes"].append([x, y, x + w, y + h])
-                rois_pred["scores"].append(thresh)
+                x, y, w, h = cv2.boundingRect(contour)
+                
+                # Filter small boxes
+                if w < MIN_BOX_SIZE or h < MIN_BOX_SIZE:
+                    continue
+
+                min_row, min_col, max_row, max_col = x, y, x + w, y + h
+
+                # Check for nested boxes
+                new_box = [min_row, min_col, max_row, max_col]
+                if is_nested(new_box, rois_pred["boxes"]):
+                    continue
+
+                # Append valid box
+                rois_pred["boxes"].append(new_box)
+                rois_pred["scores"].append(thresh_mask[min_row:max_row, min_col:max_col].mean())
                 rois_pred["labels"].append(target['labels'][0][0].item())
-                draw.rectangle((x,y,x+w,y+h), outline="green", width=10)
+
+                # Draw the bounding box
+                draw.rectangle((min_row, min_col, max_row, max_col), outline="yellow", width=2)
+
+
+        for [min_row, min_col, max_row, max_col] in target['boxes'][0]:
+            draw.rectangle((min_row, min_col, max_row, max_col), outline="green", width=2)
         plt.imshow(np.array(img))
+        plt.axis('off')
         plt.savefig("example_plot.png")
         plt.imshow(final_mask)
+        plt.axis('off')
         plt.savefig("example_plot2.png")
-        
         rois_pred["boxes"] = torch.tensor(rois_pred["boxes"], dtype=torch.float32)
         rois_pred["scores"] = torch.tensor(rois_pred["scores"], dtype=torch.float32)
         rois_pred["labels"] = torch.tensor(rois_pred["labels"], dtype=torch.int64)
@@ -156,6 +194,48 @@ def evaluate_mAP(model, data_loader):
     print("--------------------------------------------")
     print()
 
+
+def print_images(model, data_loader):
+    from PIL import Image
+    import matplotlib.pyplot as plt
+    import numpy as np
+    from tqdm import tqdm  # For the progress bar
+    B_PARAMETER = os.environ.get("B_PARAMETER", 0)
+    model.eval()
+    device = next(model.parameters()).device  # Get the device the model is on
+
+    for i, (image, target) in enumerate(data_loader):
+        if i >= 10:
+            break
+        image = image.to(device, non_blocking=True)
+        output = model.explain(image)
+        explanation = output['explanation']
+
+        # Prepare the original image
+        img = np.transpose(image[0][:3].detach().cpu().numpy(), (1, 2, 0))
+        img = (img * 255).clip(0, 255).astype(np.uint8)
+
+        # Prepare the explanation image
+        explanation = (explanation[0] * 255).clip(0, 255).astype(np.uint8)
+
+        # Create a single figure with two subplots
+        plt.figure(figsize=(12, 6))
+
+        # Original image
+        plt.subplot(1, 2, 1)
+        plt.imshow(img)
+        plt.title("Original Image")
+        plt.axis("off")
+
+        # Explanation
+        plt.subplot(1, 2, 2)
+        plt.imshow(explanation, cmap='viridis')  # Use a color map if needed
+        plt.title("Explanation")
+        plt.axis("off")
+
+        # Display the combined plots
+        plt.tight_layout()
+        plt.savefig("exaples/b_%s_explanation_%i.png" % (B_PARAMETER, i))
 
 def evaluate(model, data_loader):
     # https://github.com/pytorch/vision/blob/657c0767c5ca5564c8b437ac44263994c8e0/references/classification/train.py#L61
