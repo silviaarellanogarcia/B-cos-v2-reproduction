@@ -1,8 +1,10 @@
 # Exploring Interpretability: Reproducing and Testing B-cos Alignment for DNNs
 
-This repository contains the code and experiments for the project "Exploring Interpretability: Reproducing and Testing B-cos Alignment for DNNs", conducted as part of the Advanced Deep Learning course (DD2412) at KTH Royal Institute of Technology. The project implements and extends findings from the paper ["B-cos Alignment for Inherently Interpretable CNNs and Vision Transformers"](https://arxiv.org/abs/2210.00959) focusing on reproducing key experiments and exploring additional novel experiments to assess and expand the capabilities of the B-cos transformation in deep neural networks. 
+This repository contains the code and experiments for the project "Exploring Interpretability: Reproducing and Testing B-cos Alignment for DNNs", conducted as part of the Advanced Deep Learning course (DD2412) at KTH Royal Institute of Technology. The project implements and extends findings from the paper ["B-cos Alignment for Inherently Interpretable CNNs and Vision Transformers"](https://arxiv.org/abs/2210.00959) focusing on reproducing key experiments and exploring additional novel experiments to assess and expand the capabilities of the B-cos transformation in deep neural networks. Read our main findings [here](https://github.com/user-attachments/files/18360241/Advanced_Deep_Learning___Report_Group_2.1.pdf). 
 
----
+This work was carried out by [Silvia Arellano](https://github.com/silviaarellanogarcia), [Rosamelia Carioni](https://github.com/rosameliacarioni), and [Arnau Casas](https://github.com/Casassarnau).
+
+--- 
 
 ## **Project Overview**
 1. **Reproducing results from the paper:**
@@ -18,8 +20,7 @@ This repository contains the code and experiments for the project "Exploring Int
    - **Adversarial Robustness:** tested the model's interpretability and performance under adversarial noise.
    - **Impact of AddInverse Encoding:** analyzed the role of the AddInverse image encoding technique on B-cos interpretability and performance.
    - **Segmentation Capabilities:** investigated B-cos's ability to handle segmentation tasks using the Pascal VOC dataset.
-
---- 
+ 
 
 ## **Results Overview**
 
@@ -59,4 +60,3 @@ This repository contains the code and experiments for the project "Exploring Int
   <img width="881" alt="pascal" src="https://github.com/user-attachments/assets/39117b12-88b9-4f98-a3b2-986c12b7d6f0" />
 </div>
 
----
